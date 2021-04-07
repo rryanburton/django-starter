@@ -34,30 +34,12 @@
     - Use signed cookies as the session back-end
     - `public/` is the static directory where Django will serve static files from
     - `public_collected/` is where `collectstatic` will write its files to
-
-Besides the Django app itself:
-
-- Docker support has been added which would be any files having `*docker*` in
-  its name
-- GitHub Actions have been set up
-- A `requirements-lock.txt` file has been introduced using `pip3`. The
-  management of this file is fully automated by the commands found in the `run`
-  file. We'll cover this in more detail when we talk about [updating
-  dependencies](#updating-dependencies).
-
-## Running this app
-
-You'll need to have [Docker installed](https://docs.docker.com/get-docker/).
-It's available on Windows, macOS and most distros of Linux. If you're new to
-Docker and want to learn it in detail check out the [additional resources
-links](#learn-more-about-docker-and-django) near the bottom of this README.
-
-
+  
 #### Clone this repo anywhere you want and move into the directory:
 
 ```sh
-git clone https://github.com/rryanburton/docker-django-example hellodjango
-cd hellodjango
+git clone https://github.com/rryanburton/django-starter projectdjango
+cd projectdjango
 
 # Optionally checkout a specific tag, such as: git checkout 0.3.1
 ```
@@ -147,9 +129,6 @@ The app is named `config` right now but chances are your app will be a different
 name. Since the app is already created we'll need to do a find / replace on a
 few variants of the string "config" and update a few Docker related resources.
 
-You can do that from the command line without needing to install any extra
-dependencies by following the instructions below.
-
 #### Remove the original Docker resources:
 
 
@@ -202,10 +181,6 @@ referenced within the project.
 
 #### Remove the `.git` directory and init a new git repo:
 
-This project is not meant to be a long running fork. It's your freshly minted
-project that is ready for you to start modifying based on whatever cool app you
-want to build.
-
 ```sh
 rm -rf .git/
 git init
@@ -216,10 +191,6 @@ git symbolic-ref HEAD refs/heads/main
 ```
 
 #### Start and setup the project:
-
-We don't need to rebuild anything yet. Upping it is enough for Docker to
-re-create new resources with the new name. We'll also need to setup our
-database since a new one will be created for us by Docker.
 
 ```sh
 docker-compose up
@@ -239,36 +210,11 @@ adding custom changes.
 ./run manage test
 ```
 
-If everything passes now you can optionally `git add -A && git commit -m
-"Initial commit"` and start customizing your app. Alternatively you can wait
-until you develop more of your app before committing anything. It's up to you!
+ `git add -A && git commit -m
+"initial commit"` 
 
-#### Tying up a few loose ends:
-
-You'll probably want to create a fresh `CHANGELOG.md` file for your project. I
-like following the style guide at <https://keepachangelog.com/> but feel free
-to use whichever style you prefer.
-
-Since this project is MIT licensed you should keep my name and email address in
-the `LICENSE` file to adhere to that license's agreement, but you can also add
-your name and email on a new line.
-
-If you happen to base your app off this example app or write about any of the
-code in this project it would be rad if you could credit this repo by linking
-to it. If you want to reference me directly please link to my site at
-<https://nickjanetakis.com>. You don't have to do this, but it would be very
-much appreciated!
 
 ## Updating dependencies
-
-Let's say you've customized your app and it's time to make a change to your
-`requirements.txt` or `package.json` file.
-
-Without Docker you'd normally run `pip3 install -r requirements.txt` or `yarn
-install`. With Docker it's basically the same thing and since these commands
-are in our `Dockerfile` we can get away with doing a `docker-compose build` but
-don't run that just yet.
-
 #### In development:
 
 You can run `./run pip3:outdated` or `./run yarn:outdated` to get a list of
@@ -282,14 +228,14 @@ yarn:install`. That'll make sure any lock files get copied from Docker's image
 version control like usual.
 
 You can check out the
-[run](https://github.com/nickjj/docker-django-example/blob/main/run) file to see
+[run](/run) file to see
 what these commands do in more detail.
 
 As for the requirements' lock file, this ensures that the same exact versions
 of every package you have (including dependencies of dependencies) get used the
 next time you build the project. This file is the output of running `pip3
 freeze`. You can check how it works by looking at
-[bin/pip3-install](https://github.com/nickjj/docker-django-example/blob/main/bin/pip3-install).
+[bin/pip3-install](/bin/pip3-install).
 
 You should never modify the lock files by hand. Add your top level Python
 dependencies to `requirements.txt` and your top level JavaScript dependencies
@@ -299,7 +245,7 @@ to `assets/package.json`, then run the `./run` command(s) mentioned earlier.
 
 You'll want to run `docker-compose build` since it will use any existing lock
 files if they exist. You can also check out the complete CI test pipeline in
-the [run](https://github.com/nickjj/docker-django-example/blob/main/run) file
+the [run](/run) file
 under the `ci:test` function.
 
 #### In production:
